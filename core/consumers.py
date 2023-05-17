@@ -13,3 +13,6 @@ class NotificationConsumer(WebsocketConsumer):
 
     def disconnect(self, code):
         async_to_sync(self.channel_layer.group_discard)(self.GROUP_NAME, self.channel_name)
+
+    def user_joined(self, event):
+        self.send(text_data=event["text"])
