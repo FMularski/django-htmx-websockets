@@ -1,5 +1,10 @@
 from pathlib import Path
 
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -8,10 +13,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-q@1(jq6-v=_3f=!^lbwhg)_16rn7c*bdu_j1*c4y18z!t_2gqv"
+SECRET_KEY = env.str("SECRET_KEY", "default-secret")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool("DEBUG", True)
 
 ALLOWED_HOSTS = []
 
@@ -19,6 +24,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -30,6 +36,7 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    # "channels",
 ]
 
 MIDDLEWARE = [
@@ -68,8 +75,12 @@ WSGI_APPLICATION = "htmx_websockets.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": env.str("POSTGRES_DB", "postgres"),
+        "USER": env.str("POSTGRES_USER", "postgres"),
+        "PASSWORD": env.str("POSTGRES_PASSWORD", "postgres"),
+        "HOST": env.str("POSTGRES_HOST", "db"),
+        "PORT": env.int("POSTGRES_PORT", 5432),
     }
 }
 
@@ -115,9 +126,9 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-AUTH_USER_MODEL = 'core.User'
+AUTH_USER_MODEL = "core.User"
 
 SITE_ID = 1
 
-ACCOUNT_EMAIL_VERIFICATION = 'none'
-LOGIN_REDIRECT_URL = 'index'
+ACCOUNT_EMAIL_VERIFICATION = "none"
+LOGIN_REDIRECT_URL = "index"
