@@ -72,7 +72,10 @@ ASGI_APPLICATION = "htmx_websockets.asgi.application"
 
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer",
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(env.str("REDIS_HOST", "redis"), env.int("REDIS_PORT", 6379))],
+        },
     },
 }
 
