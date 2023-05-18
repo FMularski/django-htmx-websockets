@@ -28,5 +28,4 @@ class NotificationConsumer(WebsocketConsumer):
         html = get_template("core/partials/notification.html").render(
             context={"username": event["text"]}
         )
-        self.send(text_data=event["text"])
         self.send(text_data=html)
